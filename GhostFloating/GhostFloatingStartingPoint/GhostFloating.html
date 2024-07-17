@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,20 +31,46 @@
     </svg>
     <script>
         let ghost = document.getElementById("redGhost");
-        let x = 260; //You'll want the x-coordinate of the mouse to be a global variable
-        let y = 260; //You'll want the y-coordinate of the mouse to be a global variable
+        let canvas = document.getElementById('canvas');
+        let mx = 260; //You'll want the x-coordinate of the mouse to be a global variable
+        let my = 260; //You'll want the y-coordinate of the mouse to be a global variable
+        let ds = 5;
+        let interval = 20;
 
         /** You'll want to create a mousemove event listener that publishes the current
         mouse coordinate values to these global x and y variables */
+        canvas.addEventListener('mousemove', publishCoordinates, false);
+        function publishCoordinates(event) {
+            mx = event.offsetX;
+            my = event.offsetY;
+        }
+       
 
         /** You'll want to create a set interval callback that moves the ghost
         towards these mouse coordinates **/
+        
+       setInterval(moveGhost, interval)
+       function moveGhost() {
+            let gx = Number(ghost.getAttribute("x"));
+            let gy = Number(ghost.getAttribute("y"));
+            let dx = 0;
+            let dy = 0;
+            if(mx != gx) {
+                let m = (my - gy) / (mx - gx);
+                dx = Math.sign(mx - gx) * ds / Math.sqrt(1 + m * m);
+                dy = m * dx;
+            } else {
+                dy = Math.sign(my - gy) * ds;
+            }
+            ghost.setAttribute("x", gx + dx); //the new x-coordinate for the moving object
+            ghost.setAttribute("y", gy + dy);
 
         /* In the callback function, you should be able to get the current "x" attribute
         of the ghost by using ghost.getAttribute("x"), and you should be able to set the 
         "x" attribute of the ghost to a value using ghost.setAttribute("x", value). The 
         same is true for "y". */
-        
+    }
+
     </script>
 </body>
 </html>
